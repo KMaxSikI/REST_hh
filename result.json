@@ -1,1 +1,270 @@
-[{"keywords": "python developer", "count": 80, "down": 455727.76, "up": 516014.46, "requirements": [{"name": "python", "count": 56, "percent": 70.0}, {"name": "git", "count": 29, "percent": 36.25}, {"name": "sql", "count": 26, "percent": 32.5}, {"name": "docker", "count": 18, "percent": 22.5}, {"name": "postgresql", "count": 16, "percent": 20.0}]}]
+[
+    {
+        "keywords": "python developer",
+        "count": 12,
+        "average salary RUR": 70000.0,
+        "average salary USD": 1041.67,
+        "requirements": [
+            {
+                "name": "Python",
+                "count": 12,
+                "persent": 12.5
+            },
+            {
+                "name": "SQL",
+                "count": 5,
+                "persent": 5.2
+            },
+            {
+                "name": "API",
+                "count": 5,
+                "persent": 5.2
+            },
+            {
+                "name": "Git",
+                "count": 5,
+                "persent": 5.2
+            },
+            {
+                "name": "Django Framework",
+                "count": 4,
+                "persent": 4.2
+            },
+            {
+                "name": "Linux",
+                "count": 4,
+                "persent": 4.2
+            },
+            {
+                "name": "PostgreSQL",
+                "count": 4,
+                "persent": 4.2
+            },
+            {
+                "name": "Docker",
+                "count": 3,
+                "persent": 3.1
+            },
+            {
+                "name": "FastAPI",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "RabbitMQ",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "Тестирование",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "QA",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "Ручное тестирование",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "Test case",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "PowerShell",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "Flask",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "aiohttp",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "Django",
+                "count": 2,
+                "persent": 2.1
+            },
+            {
+                "name": "HTTP",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Docker-compose",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "SQLAlchemy",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "СУБД",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Go",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Sphinx",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Latex",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Pandoc",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Vale",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Проведение тестирований",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Bug Reporting",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Atlassian Jira",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Service Desk",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Техническая поддержка",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "MongoDB",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Redis",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Nginx",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Backend",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Dart",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Flutter",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "iOS",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "XML",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "JSON",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Android",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Функциональное тестирование",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "REST",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "REST API",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Интеграционное тестирование",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Нагрузочное тестирование",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Redmine",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "VBS",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Transact-SQL",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Английский язык",
+                "count": 1,
+                "persent": 1.0
+            },
+            {
+                "name": "Эффективная коммуникация",
+                "count": 1,
+                "persent": 1.0
+            }
+        ]
+    }
+]

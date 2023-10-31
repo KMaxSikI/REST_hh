@@ -1,94 +1,102 @@
-from pprint import pprint
-from pickle import dump, load
-from os.path import exists
-import re
-from collections import Counter
-from json import dump as jdump
+import requests
+import json
 
-from requests import get
-from pycbrf import ExchangeRates
 
-#  ввод интерисующей вакансии
-vacancy = input('Введите интересующую вакансию: ')
-url = 'https://api.hh.ru/vacancies'
-rate = ExchangeRates() # загрузка текущих курсов валют
-# загрузка файла с цифровыми кодами
-if exists('area.pkl'):
-    with open('area.pkl', mode='rb') as f:
-        area = load(f)
-else:
-    area = {}
-p = {'text': vacancy}
-r = get(url=url, params=p).json()
-# pprint(r)
-count_pages = r['pages']
-all_count = len(r['items'])
-result = {
-        'keywords': vacancy,
-        'count': all_count}
-sal = {'from': [], 'to': []}
-skillis = []
-# сначала выявляем сколько будет получено страниц
-# и готовим нужные переменные. А затем проходим по каждой из полученных страниц.
-for page in range(count_pages):
-    if page > 2:
-        break
+def search_vacancies(city, job_title):
+    base_url = 'https://api.hh.ru/vacancies'
+    params = {
+        'text': job_title,
+        'area': city,
+    }
+    response = requests.get(base_url, params=params)
+    if response.status_code == 200:
+        return response.json().get('items', [])
     else:
-        print(f"Обрабатывается страница {page}")
-    p = {'text': vacancy,
-         'page': page}
-    ress = get(url=url, params=p).json()
-    all_count = len(ress['items'])
-    result['count'] += all_count
-    for res in ress['items']:
-        # pprint(res)
-        skills = set()
-        city_vac = res['area']['name']
-        # добавление города из ответа на запроса, если его нет в файле.
-        if city_vac not in area:
-            area[city_vac] = res['area']['id']
-        ar = res['area']
-        res_full = get(res['url']).json()
-        # pprint(res_full)
-        #  обработка описания вакансии
-        pp = res_full['description']
-        # print(pp)
-        pp_re = re.findall(r'\s[A-Za-z-?]+', pp)
-        # print(pp_re)
-        its = set(x.strip(' -').lower() for x in pp_re)
-        # print(its)
-        for sk in res_full['key_skills']:
-            skillis.append(sk['name'].lower())
-            skills.add(sk['name'].lower())
-        # skills |= sk1
-        for it in its:
-            if not any(it in x for x in skills):
-                skillis.append(it)
-        #окончание формирования списка навыков
-        # обработка заплаты
-        if res_full['salary']:
-            code = res_full['salary']['currency']
-            if rate[code] is None:
-                code = 'RUR'
-            k = 1 if code == 'RUR' else float(rate[code].value)
-            sal['from'].append(k * res_full['salary']['from'] if res['salary']['from'] else k * res_full['salary']['to'])
-            sal['to'].append(k * res_full['salary']['to'] if res['salary']['to'] else k*res_full['salary']['from'])
-# print(skillis)
-sk2 = Counter(skillis)
-# pprint(sk2)
-up = sum(sal['from']) / len(sal['from'])
-down = sum(sal['to']) / len(sal['to'])
-result.update({'down': round(up, 2),
-               'up': round(down, 2)})
-add = []
-for name, count in sk2.most_common(5):
-    add.append({'name': name,
-                'count': count,
-                'percent': round((count / result['count'])*100, 2)})
-result['requirements'] = add
-pprint(result)
-# сохранение файла с результами работы
-with open('result.json', mode='w') as f:
-    jdump([result], f)
-with open('area.pkl', mode='wb') as f:
-    dump(area, f)
+        return []
+
+
+def get_vacancy_requirements(vacancy_id):
+    base_url = f'https://api.hh.ru/vacancies/{vacancy_id}'
+    response = requests.get(base_url)
+    if response.status_code == 200:
+        return response.json().get('key_skills', [])
+    else:
+        return []
+
+
+def analyze_vacancies(vacancies):
+    num_vacancies = 0
+    total_salary_rur = 0
+    total_salary_usd = 0
+    requirements = {}
+
+    for vacancy in vacancies:
+        salary = vacancy.get('salary')
+        if isinstance(salary, dict):
+            rur_from = salary.get('from', 0)
+            rur_to = salary.get('to', 0)
+            usd_from = salary.get('from', 0)
+            usd_to = salary.get('to', 0)
+
+            if salary.get('currency') == 'RUR':
+                if rur_from is not None and rur_to is not None:
+                    total_salary_rur += (rur_from + rur_to) / 2
+                elif rur_from is not None:
+                    total_salary_rur += rur_from
+                elif rur_to is not None:
+                    total_salary_rur += rur_to
+            elif salary.get('currency') == 'USD':
+                if usd_from is not None and usd_to is not None:
+                    total_salary_usd += (usd_from + usd_to) / 2
+                elif usd_from is not None:
+                    total_salary_usd += usd_from
+                elif usd_to is not None:
+                    total_salary_usd += usd_to
+                total_salary_usd *= 10
+
+            num_vacancies += 1
+
+        vacancy_requirements = get_vacancy_requirements(vacancy['id'])
+        if vacancy_requirements:
+            for skill in vacancy_requirements:
+                skill_name = skill.get('name')
+                if skill_name:
+                    requirements[skill_name] = requirements.get(skill_name, 0) + 1
+
+    average_salary_rur = total_salary_rur / num_vacancies if num_vacancies > 0 else 0
+    average_salary_usd = total_salary_usd / num_vacancies if num_vacancies > 0 else 0
+
+    total_requirements = sum(requirements.values())
+    requirements_percentage = {requirement: (count / total_requirements) * 100 for requirement, count in
+                               requirements.items()}
+
+    return num_vacancies, average_salary_rur, average_salary_usd, requirements, requirements_percentage
+
+
+city = '1'  # Москва
+job_title = input('Введите наименование вакансии: ')
+
+vacancies = search_vacancies(city, job_title)
+num_vacancies, average_salary_rur, average_salary_usd, requirements, requirements_percentage = analyze_vacancies(
+    vacancies)
+
+result = [{
+    'keywords': job_title,
+    'count': num_vacancies,
+    'average salary RUR': round(average_salary_rur, 2),
+    'average salary USD': round(average_salary_usd, 2),
+    'requirements': [{
+        'name': requirement,
+        'count': count,
+        'persent': round(percentage, 1),
+
+        } for requirement, count, percentage in
+        sorted(zip(requirements.keys(), requirements.values(), requirements_percentage.values()), key=lambda x: x[1],
+               reverse=True)
+    ]}]
+
+
+with open('result.json', 'w', encoding='utf-8') as json_file:
+    json.dump(result, json_file, ensure_ascii=False, indent=4)
+
+print("Результат записан в файл 'result.json'")
